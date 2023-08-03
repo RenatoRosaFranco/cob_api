@@ -27,7 +27,7 @@ FactoryBot.define do
       value { rand(60..80).to_f }
     end
 
-    compettition
+    competition
     athlete
   end
 end

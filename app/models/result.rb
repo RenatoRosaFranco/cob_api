@@ -21,13 +21,13 @@
 #
 class Result < ApplicationRecord
   # Properties
-  self.table_name = 'results'
+  self.table_name  = 'results'
   self.primary_key = 'id'
 
   # Relationships
-  belongs_to :compettition
+  belongs_to :competition
   belongs_to :athlete
 
   # Validations
-  validates_presence_of :value, :compettition_id, :athlete_id
+  validates_presence_of :value, :competition_id, :athlete_id
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_03_161159) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_03_180505) do
   create_table "athletes", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_03_161159) do
     t.datetime "updated_at", null: false
     t.integer "status", default: 0
     t.integer "max_attempts", default: 1
+    t.string "ranking_rule", default: "asc"
   end
 
   create_table "results", force: :cascade do |t|

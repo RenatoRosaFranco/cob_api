@@ -20,7 +20,7 @@
 #
 class CompetitionAthlete < ApplicationRecord
   # Properties
-  self.table_name = 'competition_athletes'
+  self.table_name  = 'competition_athletes'
   self.primary_key = 'id'
 
   # Relationships

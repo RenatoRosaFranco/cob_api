@@ -8,8 +8,10 @@
 #  updated_at :datetime         not null
 #
 class Athlete < ApplicationRecord
+  include AthleteInterface
+
   # Properties
-  self.table_name = 'athletes'
+  self.table_name  = 'athletes'
   self.primary_key = 'id'
 
   # Relationships

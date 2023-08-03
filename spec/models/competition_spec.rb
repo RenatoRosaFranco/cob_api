@@ -5,6 +5,7 @@
 #  id           :integer          not null, primary key
 #  max_attempts :integer          default(1)
 #  name         :string
+#  ranking_rule :string           default("asc")
 #  status       :integer          default("open")
 #  unit         :string
 #  created_at   :datetime         not null

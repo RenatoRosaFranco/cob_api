@@ -1,21 +1,16 @@
-FROM ruby:latest
+FROM ruby:3.0.2
+
+ENV RAILS_ENV=production
+
+RUN apt-get update -qq && apt-get install -y nodejs sqlite3 libsqlite3-dev
 
 WORKDIR /app
 
-RUN apt-get install && apt-get install -y \
-    build-essential \
-    nodejs \
-    sqlite3 \
-    libsqlite3-dev
+COPY Gemfile Gemfile.lock ./
 
-RUN gem install rails -v '7.0.6'
-
-COPY Gemfile Gemfile.lock
-
-RUN bundle install
+RUN gem install bundler
+RUN bundle install --jobs 4
 
 COPY . .
 
-EXPOSE 3000
-
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]

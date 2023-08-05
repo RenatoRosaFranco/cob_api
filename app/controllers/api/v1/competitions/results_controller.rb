@@ -9,7 +9,7 @@ module API
         before_action :set_competition
         before_action :set_result, only: %i[show update destroy]
 
-        def index        
+        def index
           results = @competition.results.order(created_at: :desc)
           render json: results
         end

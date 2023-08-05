@@ -64,6 +64,7 @@ group :development, :test do
   gem 'rails_best_practices'
   gem 'rails-controller-testing'
   gem 'shoulda'
+  gem 'rubocop-rails'
 end
 
 group :development do

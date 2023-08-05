@@ -30,7 +30,13 @@ RSpec.describe API::V1::Competitions::RankingsController, type: :controller do
     end
 
     context 'when competition is closed' do
-      let(:competition) { FactoryBot.create(:competition, status: 'closed') }
+      let(:competition) { FactoryBot.create(:competition) }
+    
+      before do
+        FactoryBot.create_list(:result, 12, competition: competition)
+        
+        competition.currently_closed!
+      end
 
       it 'returns a sucessfull response' do
         get :index, params: { competition_id: competition.id }
@@ -42,6 +48,14 @@ RSpec.describe API::V1::Competitions::RankingsController, type: :controller do
         expect(response).to have_http_status(:success)
         expect(response_body['ranking_type']).to eq('final')
         expect(response_body['ranking']).to eq(ranking)
+      end
+    end
+
+    context 'without a competition' do
+      it 'return not found for invalid competition id', :aggregate_failures do
+        get :index, params: { competition_id: 999 }
+        expect(response).to have_http_status(:not_found)
+        expect(response_body).to eq(not_found_message)
       end
     end
   end

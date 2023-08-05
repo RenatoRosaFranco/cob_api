@@ -22,16 +22,15 @@
 FactoryBot.define do
   factory :result do
     value { rand(8..12).to_f }
+    athlete
+    competition
 
     trait :dart_result do
       value { rand(60..80).to_f }
     end
 
-    athlete
-    competition
-
     trait :in_competition do
-      after(:create) do |result, evaluator|
+      before(:create) do |result, evaluator|
         create(:competition_athlete, {
           athlete: result.athlete,
           competition: result.competition

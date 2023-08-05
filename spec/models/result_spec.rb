@@ -22,11 +22,15 @@
 require 'rails_helper'
 
 RSpec.describe Result, type: :model do
-  subject { FactoryBot.build(:result, { competition: competition, athlete: athlete }) }
+  subject do 
+    FactoryBot.build(:result, { competition: competition, athlete: athlete })
+  end
 
   let(:athlete) { FactoryBot.create(:athlete, name: 'Piotr Lisek') }
   let(:competition) { FactoryBot.create(:competition) }
-  let(:competition_athlete) { FactoryBot.build(:competition_athlete, competition: competition, athlete: athlete) }
+  let(:competition_athlete) do
+    FactoryBot.build(:competition_athlete, competition: competition, athlete: athlete)
+  end
 
   context 'valid object' do
     it { should be_valid(subject) }

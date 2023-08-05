@@ -19,6 +19,7 @@
 #  competition_id  (competition_id => competitions.id)
 #
 class CompetitionAthlete < ApplicationRecord
+
   # Properties
   self.table_name  = 'competition_athletes'
   self.primary_key = 'id'

@@ -9,6 +9,6 @@
 #
 FactoryBot.define do
   factory :athlete do
-    name { FFaker::NameBR.name }
+    name { "#{FFaker::NameBR.name}#{rand(100)}" }
   end
 end

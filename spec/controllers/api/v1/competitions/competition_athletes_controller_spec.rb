@@ -43,16 +43,28 @@ RSpec.describe API::V1::Competitions::CompetitionAthletesController, type: :cont
   end
 
   describe 'POST #create' do
-    let(:athlete) { FactoryBot.create(:athlete, { name: 'Patricia Oro' })}
+    let(:athlete) { FactoryBot.create(:athlete, { name: 'Patricia Oro' }) }
     let(:competition_athlete) do
       FactoryBot.attributes_for(:competition_athlete, { athlete_id: athlete.id, competition_id: competition.id })
     end
 
+    it 'create a new competition_athlete', :aggregate_failures do
+      expect { post :create, params: {
+        competition_id: competition.id,
+        competition_athlete: competition_athlete
+      }}.to change(CompetitionAthlete, :count).by(1)
+
+      expect(response).to have_http_status(:created)
+      expect(response_body['competition_athlete']['id']).to eq(Competition.last.id)
+      expect(response_body['competition_athlete']['competition_id']).to eq(competition.id)
+    end
+
     it 'returns unprocessable entity for invalid params', :aggregate_failures do
-      post :create, params: {
+      expect { post :create, params: {
         competition_id: competition.id,
         competition_athlete: { competition_id: nil, athlete_id: athlete.id }
-      }
+      }}.not_to change(CompetitionAthlete, :count)
+
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response_body).to eq({ 'errors' => {
         'competition' => ['must exist', 'can\'t be blank']

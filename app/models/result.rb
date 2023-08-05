@@ -20,6 +20,7 @@
 #  competition_id  (competition_id => competitions.id)
 #
 class Result < ApplicationRecord
+
   # Properties
   self.table_name  = 'results'
   self.primary_key = 'id'
@@ -30,4 +31,11 @@ class Result < ApplicationRecord
 
   # Validations
   validates_presence_of :value, :competition_id, :athlete_id
+
+  # Custom Validators
+  validate do |result|
+    CompetitionStatusValidator.new(result).validate
+    # SubscriptionValidator.new(result).validate
+    MaxAttemptsValidator.new(result).validate
+  end
 end

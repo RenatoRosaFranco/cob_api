@@ -35,7 +35,7 @@ class Result < ApplicationRecord
   # Custom Validators
   validate do |result|
     CompetitionStatusValidator.new(result).validate
-    # SubscriptionValidator.new(result).validate
+    SubscriptionValidator.new(result).validate
     MaxAttemptsValidator.new(result).validate
   end
 end

@@ -12,7 +12,9 @@ RSpec.describe API::V1::Competitions::RankingsController, type: :controller do
     let(:ranking) { competition.ranking.as_json }
 
     before do
-      FactoryBot.create_list(:result, 12, competition: competition)
+      FactoryBot.create_list(:result, 12, :in_competition, { 
+        competition:competition
+      })
     end
 
     context 'when competition is open' do
@@ -33,8 +35,10 @@ RSpec.describe API::V1::Competitions::RankingsController, type: :controller do
       let(:competition) { FactoryBot.create(:competition) }
     
       before do
-        FactoryBot.create_list(:result, 12, competition: competition)
-        
+        FactoryBot.create_list(:result, 12, :in_competition, {
+          competition_id: competition.id
+        })
+
         competition.currently_closed!
       end
 

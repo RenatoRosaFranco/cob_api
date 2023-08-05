@@ -16,6 +16,10 @@ RSpec.describe AthleteInterface, type: :interface do
 
   context '.athlete_results' do
     before do
+      FactoryBot.create(:competition_athlete, { 
+        athlete_id: athlete.id, competition_id: competition.id 
+      })
+
       FactoryBot.create_list(:result, 3, {
         athlete: athlete, competition: competition
       })
@@ -31,7 +35,13 @@ RSpec.describe AthleteInterface, type: :interface do
     end
 
     before do
-      FactoryBot.create_list(:result, 3, { athlete: athlete, competition: competition })
+      FactoryBot.create(:competition_athlete, {
+        athlete_id: athlete.id, competition_id: competition.id
+      })
+      
+      FactoryBot.create_list(:result, 3, {
+        athlete: athlete, competition: competition
+      })
     end
 
     it { expect(athlete.highlight_result(competition).count).to eq(1) }

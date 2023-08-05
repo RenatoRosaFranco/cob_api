@@ -28,8 +28,11 @@ RSpec.describe Result, type: :model do
 
   let(:athlete) { FactoryBot.create(:athlete, name: 'Piotr Lisek') }
   let(:competition) { FactoryBot.create(:competition) }
-  let(:competition_athlete) do
-    FactoryBot.build(:competition_athlete, competition: competition, athlete: athlete)
+
+  before do
+    FactoryBot.create(:competition_athlete, {
+      competition_id: competition.id, athlete_id: athlete.id
+    })
   end
 
   context 'valid object' do

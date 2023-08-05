@@ -51,6 +51,12 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
       FactoryBot.attributes_for(:result,  { athlete_id: athlete.id, competition_id: competition.id, value: 10.0 })
     end
 
+    before do
+      FactoryBot.create(:competition_athlete, {
+        competition_id: competition.id, athlete_id: athlete.id
+      })
+    end
+
     context 'when competition is open' do
       it 'creates a new result' do
         expect {
@@ -60,6 +66,10 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
         expect(response).to have_http_status(:created)
         expect(response_body['result']['id']).to eq(Result.last.id)
         expect(response_body['result']['value']).to eq(10.0)
+      end
+
+      context 'when athlete is not subscribed' do
+
       end
 
       context 'when athlete exceeds max attempts' do
@@ -116,11 +126,17 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
     let(:athlete) { result.athlete }
     let!(:result) { FactoryBot.create(:result, :in_competition) }
     
-    let(:new_result) do
+    let(:result_params) do
       FactoryBot.attributes_for(:result, {
         competition_id: competition.id,
         athlete_id: athlete.id,
         value: value
+      })
+    end
+
+    before do
+      FactoryBot.create(:competition_athlete, {
+        competition_id: competition.id, athlete_id: athlete.id
       })
     end
 
@@ -129,12 +145,53 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
         patch :update, params: {
           id: result.id, 
           competition_id: competition.id, 
-          result: new_result
+          result: result_params
         }
 
         expect(response).to have_http_status(:ok)
         expect(response_body['result']['id']).to eq(result.id)
-        expect(response_body['result']['value']).to eq(new_result[:value])
+        expect(response_body['result']['value']).to eq(result_params[:value])
+      end
+
+      context 'when athlete exceeds max attempts' do
+        let(:error_message) { 'O Atleta excedeu o nº máximo de tentativas' }
+
+        let(:athlete2) { FactoryBot.create(:athlete, { name: 'Pia Skrzyszowska' }) }
+        let(:result_params) do
+          FactoryBot.attributes_for(:result, {
+            competition_id: competition.id,
+            athlete_id: athlete.id,
+            value: value
+          })
+        end
+
+        before do
+          FactoryBot.create(:competition_athlete, {
+            competition_id: competition.id, athlete_id: athlete2.id
+          })
+
+          FactoryBot.create(:result, {
+            competition_id: competition.id,
+            athlete_id: athlete2.id,
+          })
+
+          FactoryBot.create(:result, {
+            competition_id: competition.id,
+            athlete_id: athlete.id,
+          })
+        end
+
+        it 'not update a result' do
+          expect {
+            post :update, params: {
+            id: athlete2.results.last.id,
+            competition_id: competition.id,
+            result: result_params
+          }}.not_to change(Result, :count)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body['errors']['max_attempts']).to eq([error_message])
+        end
       end
     end
 
@@ -147,7 +204,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
         patch :update, params: {
           id: result.id, 
           competition_id: competition.id, 
-          result: new_result
+          result: result_params
         }
 
         expect(response).to have_http_status(:unprocessable_entity)
@@ -167,7 +224,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
 
     it 'return not found for invalid result', :aggregate_failures do
       patch :update, params: {
-        id: 999, competition_id: competition.id, result: new_result
+        id: 999, competition_id: competition.id, result: result_params
       }
 
       expect(response).to have_http_status(:not_found)

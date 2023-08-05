@@ -22,8 +22,13 @@ module CompetitionInterface
     end
 
     def ranking
-      results.select('MAX(value) as value, id, athlete_id')
-             .group(:athlete_id).order(value: :"#{ranking_rule}")
+      results.joins(:competition, :athlete)
+             .select( 'results.id,
+                competitions.name as competicao,
+                athletes.name as atleta,
+                MAX(value) as value,
+                competitions.unit as unidade'
+              ).group(:athlete_id).order(value: :"#{ranking_rule}")
     end
   end
 end

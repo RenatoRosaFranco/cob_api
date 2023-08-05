@@ -27,7 +27,16 @@ FactoryBot.define do
       value { rand(60..80).to_f }
     end
 
-    competition
     athlete
+    competition
+
+    trait :in_competition do
+      after(:create) do |result, evaluator|
+        create(:competition_athlete, {
+          athlete: result.athlete,
+          competition: result.competition
+        })
+      end 
+    end
   end
 end

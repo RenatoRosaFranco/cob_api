@@ -29,6 +29,6 @@ class Competition < ApplicationRecord
   has_many :results
 
   # Validations
-  validates_presence_of :name, :unit
+  validates_presence_of :name, :status, :unit, :ranking_rule, :max_attempts
   validates_uniqueness_of :name
 end

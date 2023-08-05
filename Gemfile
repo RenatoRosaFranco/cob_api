@@ -62,6 +62,7 @@ group :development, :test do
   gem 'simplecov'
   gem 'rails-erd'
   gem 'rails_best_practices'
+  gem 'rails-controller-testing'
   gem 'shoulda'
 end
 

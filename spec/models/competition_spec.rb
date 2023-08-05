@@ -14,5 +14,23 @@
 require 'rails_helper'
 
 RSpec.describe Competition, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject { FactoryBot.build(:competition) }
+
+  context 'valid object' do
+    it { should be_valid(subject) }
+  end
+
+  context '.validations' do
+    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:status) }
+    it { should validate_presence_of(:unit) }
+    it { should validate_presence_of(:ranking_rule) }
+    it { should validate_presence_of(:max_attempts) }
+  end
+
+  context '.relationships' do
+    it { should have_many(:competition_athletes) }
+    it { should have_many(:athletes).through(:competition_athletes) }
+    it { should have_many(:results) }
+  end
 end

@@ -22,5 +22,24 @@
 require 'rails_helper'
 
 RSpec.describe Result, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  subject { FactoryBot.build(:result, { competition: competition, athlete: athlete }) }
+
+  let(:athlete) { FactoryBot.create(:athlete, name: 'Piotr Lisek') }
+  let(:competition) { FactoryBot.create(:competition) }
+  let(:competition_athlete) { FactoryBot.build(:competition_athlete, competition: competition, athlete: athlete) }
+
+  context 'valid object' do
+    it { should be_valid(subject) }
+  end
+
+  context '.validations' do
+    it { should validate_presence_of(:athlete_id) }
+    it { should validate_presence_of(:competition_id) }
+    it { should validate_presence_of(:value) }
+  end
+
+  context '.relationships' do
+    it { should belong_to(:competition) }
+    it { should belong_to(:athlete) }
+  end
 end

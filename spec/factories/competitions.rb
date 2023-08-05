@@ -13,14 +13,17 @@
 #
 FactoryBot.define do
   factory :competition do
-    name { '100m Classificatória 1' }
+    name { FFaker::SportUS.name }
     status { 'open' }
     ranking_rule { 'asc' }
     max_attempts { 1 }
     unit { 's' }
-
-    trait :closed do
-      status { 'closed' }
+    
+    trait :running_competition do
+      name { '100m Classificatória 1' }
+      ranking_rule { 'asc' }
+      max_attempts { 1 }
+      unit { 's' }
     end
 
     trait :dart_competition do
@@ -28,6 +31,10 @@ FactoryBot.define do
       ranking_rule { 'desc' }
       max_attempts { 3 }
       unit { 'm' }
+    end
+
+    trait :closed do
+      status { 'closed' }
     end
   end
 end

@@ -28,6 +28,6 @@ class CompetitionAthlete < ApplicationRecord
   belongs_to :athlete
 
   # Validations
-  validates_presence_of :competition_id, :athlete_id
-  validates_uniqueness_of :athlete_id, scope: [:competition_id]
+  validates_presence_of :athlete, :competition
+  validates_uniqueness_of :athlete, scope: [:competition_id]
 end

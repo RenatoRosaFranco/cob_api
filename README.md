@@ -1,46 +1,59 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
+### Ruby version
+```bash
 3.0.2
+``` 
 
-* Install RBENV
+### Install RBENV
+```bash
 sudo apt install rbenv
+```
 
-* Install Ruby with RBENV
+### Install Ruby with RBENV
+```bash
 rbenv install 3.0.2
 rbenv local 3.0.2
+``` 
 
-* Rails version
+### Rails version
+```bash
 7.0.6
+```
   
-* System dependencies
+### System dependencies
+```bash
 bundle install
+```
 
-* Configuration
+### Configuration
+```bash
 docker-compose build --no-cache
-docker-compose up
-docker-compose down
+docker-compose up # scale dev environment
+docker-compose down # remove dev environment
+```
 
-* Database creation
+### Database creation
+```bash
 rails db:create
+```
 
-* Database initialization
+### Database initialization
+```bash
 rails db:migrate
+```
 
-* How to run the test suite
+### How to run the test suite
+```bash
 bundle exec rspec -fd spec/
 bundle exec rspec -fd spec/folder/
 bundle exec rspec -fd spec/folder/file
 bundle exec rspec spec/
+```
 
-* Inspect Project code quality and better_practices
+### Inspect Project code quality and better_practices
+```bash
 rails_best_practices .
 rubycritic .
 rubocop .
-
-* ...
+```

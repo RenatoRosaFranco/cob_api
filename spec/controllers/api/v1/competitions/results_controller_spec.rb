@@ -58,18 +58,34 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
     end
 
     context 'when competition is open' do
-      it 'creates a new result' do
+      it 'creates a new result', :aggregate_failures do
         expect {
           post :create, params: { 
           competition_id: competition.id, result: result
         }}.to change(Result, :count).by(1)
+
         expect(response).to have_http_status(:created)
         expect(response_body['result']['id']).to eq(Result.last.id)
         expect(response_body['result']['value']).to eq(10.0)
       end
 
       context 'when athlete is not subscribed' do
+        let(:competition_athlete) { CompetitionAthlete.last }
+        let(:error_message) { 'O Atleta não foi inscrito nesta competição' }
 
+        before do
+          competition_athlete.destroy
+        end
+
+        it 'not create a new result', :aggregate_failures do
+          expect {
+            post :create, params: {
+            competition_id: competition.id, result: result
+          }}.not_to change(Result, :count)
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response_body['errors']['subscription']).to eq([error_message])
+        end
       end
 
       context 'when athlete exceeds max attempts' do
@@ -83,7 +99,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
           })
         end
 
-        it 'not create a new result' do
+        it 'not create a new result', :aggregate_failures do
           expect {
             post :create, params: {
             competition_id: competition.id, result: result
@@ -99,7 +115,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
       let(:competition) { FactoryBot.create(:competition, { name: '400m', status: 'closed' }) }
       let(:error_message) { 'Esta competição já foi encerrada' }
 
-      it 'not create a new result' do
+      it 'not create a new result', :aggregate_failures do
         expect {
           post :create, params: { 
           competition_id: competition.id, result: result
@@ -181,7 +197,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
           })
         end
 
-        it 'not update a result' do
+        it 'not update a result', :aggregate_failures do
           expect {
             post :update, params: {
             id: athlete2.results.last.id,
@@ -242,7 +258,7 @@ RSpec.describe API::V1::Competitions::ResultsController, type: :controller do
       expect(response).to have_http_status(:no_content)
     end
 
-    it 'return not found for invalid result id' do
+    it 'return not found for invalid result id', :aggregate_failures do
       delete :destroy, params: { id: 999, competition_id: competition.id }
       expect(response).to have_http_status(:not_found)
       expect(response_body).to eq(not_found_message)

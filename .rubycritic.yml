@@ -1,4 +1,3 @@
-branch: 'development'
 deduplicate_symlinks: true
 supress_ratings: false
 no_browser: false
